@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>letters, one by one</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --void: #0a0b16;
+    --void-2: #12142a;
+    --star: #f4f0e6;
+    --moon: #cfd0e8;
+    --dust: #8b8fb8;
+    --accent: #e8a87c;
+    --accent-2: #7ec4cf;
+    --line: rgba(207,208,232,0.14);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.6) 0%, transparent 60%),
+      radial-gradient(1px 1px at 70% 15%, rgba(255,255,255,0.4) 0%, transparent 60%),
+      radial-gradient(1.5px 1.5px at 85% 60%, rgba(255,255,255,0.5) 0%, transparent 60%),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.35) 0%, transparent 60%),
+      radial-gradient(1px 1px at 10% 65%, rgba(255,255,255,0.4) 0%, transparent 60%),
+      radial-gradient(1px 1px at 55% 45%, rgba(255,255,255,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% -10%, #1c1f42 0%, transparent 55%),
+      linear-gradient(180deg, var(--void) 0%, var(--void-2) 100%);
+    background-attachment:fixed;
+    color:var(--star);
+    font-family:'Cormorant Garamond', serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:32px 18px 60px;
+  }
+
+  .masthead{
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .masthead .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.25em;
+    text-transform:uppercase;
+    color:var(--accent-2);
+    opacity:0.8;
+  }
+  .masthead h1{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:52px;
+    margin:6px 0 4px;
+    color:var(--star);
+    text-shadow:0 0 24px rgba(232,168,124,0.25);
+  }
+  .masthead p{
+    font-size:16px;
+    color:var(--dust);
+    margin:0;
+    font-style:italic;
+  }
+
+  .book{
+    width:100%;
+    max-width:620px;
+    position:relative;
+  }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015));
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:38px 34px 30px;
+    position:relative;
+    backdrop-filter:blur(6px);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+    min-height:340px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .card::before{
+    content:'';
+    position:absolute;
+    top:0; left:22px; right:22px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity:0.5;
+  }
+
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:14px;
+  }
+  .letter-index{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.15em;
+    color:var(--accent-2);
+    text-transform:uppercase;
+  }
+  .letter-date{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    color:var(--dust);
+  }
+
+  .letter-body{
+    font-size:22px;
+    line-height:1.75;
+    color:var(--moon);
+    white-space:pre-wrap;
+    flex:1;
+  }
+  .letter-body .signoff{
+    display:block;
+    margin-top:18px;
+    font-family:'Caveat', cursive;
+    font-size:30px;
+    color:var(--accent);
+  }
+
+  .empty-state{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    flex:1;
+    color:var(--dust);
+    gap:10px;
+  }
+  .empty-state .glyph{font-size:34px; opacity:0.6;}
+
+  .nav-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:22px;
+    max-width:620px;
+    width:100%;
+  }
+  .nav-btn{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--star);
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    padding:11px 18px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .nav-btn:hover:not(:disabled){
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+  .nav-btn:active:not(:disabled){transform:scale(0.97);}
+  .nav-btn:disabled{opacity:0.25; cursor:default;}
+
+  .dots{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:200px;
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--line);
+    cursor:pointer;
+    transition:background 0.2s, transform 0.2s;
+    border:none;
+    padding:0;
+  }
+  .dot.active{background:var(--accent); transform:scale(1.3);}
+  .dot:hover{background:var(--accent-2);}
+
+  .add-panel{
+    margin-top:34px;
+    width:100%;
+    max-width:620px;
+    border:1px dashed var(--line);
+    border-radius:2px;
+    padding:18px 20px;
+  }
+  .add-panel summary{
+    cursor:pointer;
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--dust);
+  }
+  .add-panel[open] summary{margin-bottom:14px;}
+  .add-panel label{
+    display:block;
+    font-family:'Space Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.1em;
+    color:var(--dust);
+    margin-bottom:5px;
+    text-transform:uppercase;
+  }
+  .add-panel input[type=text]{
+    width:100%;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--line);
+    color:var(--star);
+    font-family:'Space Mono', monospace;
+    font-size:13px;
+    padding:9px 10px;
+    border-radius:2px;
+    margin-bottom:12px;
+  }
+  .add-panel textarea{
+    width:100%;
+    min-height:160px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--line);
+    color:var(--moon);
+    font-family:'Cormorant Garamond', serif;
+    font-size:17px;
+    line-height:1.6;
+    padding:12px;
+    border-radius:2px;
+    resize:vertical;
+    margin-bottom:12px;
+  }
+  .add-panel .row{display:flex; gap:14px;}
+  .add-panel .row > div{flex:1;}
+  .save-btn{
+    background:var(--accent);
+    border:none;
+    color:#231409;
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    padding:11px 20px;
+    border-radius:2px;
+    cursor:pointer;
+    text-transform:uppercase;
+  }
+  .save-btn:hover{filter:brightness(1.08);}
+  .status-msg{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    color:var(--accent-2);
+    margin-top:10px;
+    min-height:14px;
+  }
+
+  .delete-btn{
+    background:transparent;
+    border:none;
+    color:var(--dust);
+    font-family:'Space Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.06em;
+    cursor:pointer;
+    text-decoration:underline;
+    text-underline-offset:3px;
+    padding:0;
+  }
+  .delete-btn:hover{color:#d97757;}
+
+  @media (max-width:480px){
+    .masthead h1{font-size:42px;}
+    .card{padding:28px 22px 24px;}
+    .letter-body{font-size:19px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="masthead">
+    <div class="eyebrow">a small book of things</div>
+    <h1>letters, one by one</h1>
+    <p id="subtitle">loading…</p>
+  </div>
+
+  <div class="book">
+    <div class="card" id="card">
+      <div class="empty-state">
+        <div class="glyph">✦</div>
+        <div>reading the pages…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prevBtn">&larr; prev</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="nextBtn">next &rarr;</button>
+  </div>
+
+  <details class="add-panel">
+    <summary>+ add another letter</summary>
+    <div class="row">
+      <div>
+        <label>Date (optional)</label>
+        <input type="text" id="inputDate" placeholder="e.g. 24/05/26">
+      </div>
+      <div>
+        <label>Title (optional)</label>
+        <input type="text" id="inputTitle" placeholder="e.g. letter one">
+      </div>
+    </div>
+    <label>Letter text</label>
+    <textarea id="inputBody" placeholder="Paste or type the letter here..."></textarea>
+    <button class="save-btn" id="saveBtn">save letter</button>
+    <div class="status-msg" id="statusMsg"></div>
+  </details>
+
+<script>
+const STORAGE_KEY = 'letters:all';
+let letters = [];
+let current = 0;
+
+async function loadLetters(){
+  try{
+    const res = await window.storage.get(STORAGE_KEY);
+    letters = res && res.value ? JSON.parse(res.value) : [];
+  }catch(e){
+    letters = [];
+  }
+  if(letters.length === 0){
+    // seed with the first letter transcribed from the notebook
+    letters = [
+      {
+        date: "24/05/26",
+        title: "letter one",
+        body: `Well well well, so... Ummi, I thought why not, uk, so this book (pretty small ik) hopefully is going to be a set of pages / letters, idk what to call them. :) And ya, it's gonna be a surprise gift for you. Well I did show you this book, so hopefully you remember this. I plan to write some things in this and ya, no restrictions, it's gonna be everything that comes to my mind. And yes, if everything goes well you should read this on 18 July, and it's been one year. Congrats!!!
+
+Well I can't express how hard these weekends are going without you so much.
+
+I just came out of the shower uk, and you asked me to write an essay on movies. Maybe I will keep reading to find it uk.
+
+Ya so, weekends uk, and wait let me tell you something — yesterday I went to meet my senior Varun. Night uk we talked, had food, he also gave a gift here and I felt so jealous that they have already met like 10 times in the past month and we haven't yet, in like 11 months. So ya, we had food and icecream here..... And when we left, idk how, I saw one of my school friends here — okay backstory time.
+
+So when I was in school I had a friend Aan, we were in different classes but ya, same science student, same society, and we used to play basketball, but ya he got VIT Vellore mech and ya, we had the great separation.
+
+So I met him like for 5 mins, then like I felt it might rain, so I kept uk Bangalore weather very risky. Who knows, we might meet again. Well ig that's all for aaj.
+
+Miss you a lot, poobie bear
+
+Don't know why I signed but hehe.
+
+♡
+
+Yes it's a heart, stop laughing.
+
+I said stopppp`
+      },
+      {
+        date: "25/05/26",
+        title: "letter two",
+        body: `Helle Ruru,
+
+So aaj lets talk about my team uk hehe.
+
+So we have me, Gaurav (seasonal intern joining next month), Darshan, Nishant, Ansh, Harpreet, Goniati, Gyan, Nikhil, Saif (my manager), Pooja, Trusha, Anurag. Ig that's all, so soso.
+
+We went to play pickleball, we were me, Gaurav, Nishant, Gyan, Nikhil, Harpreet and like we played, booked for like 1.5 hr. So 4:30 to 6, but uk it was empty so no one told us to stop, soooo we played till 7:15 ig. And like the sport is fun, like pretty hard at first.
+
+But as we played it was easy, I made some crazy comebacks (obvi I am the best). Then we left and me and Gaurav had PG around same area and while walking met a working family, and like they were called here for work but got scammed, and idk I couldn't say no and gave them some money. Then we had golgappe...
+
+It was the Gujarat one, 6 pieces 6 water for 30, pretty good. I am planning to go every night lehe. And yaar I feel sad, uk our team doesn't do team outings on weekends so it's kinda sad.
+
+Anyway, ho kuch hua ni, so that's all for today.
+
+See ya soooooon.
+
+Love you.`
+      },
+      {
+        date: "30/5/26",
+        title: "letter three",
+        body: `Well well, so aaj is Saturday hehe, and sadly kal salary nhi aai, kinda depressing uk, not kinda very. So we hit tu lige aaj. :(
+
+And it was good kinda, and we no maining ourr as saale ik already good uk letters than yours hehehehehe.
+
+Yesterday and today nothing really much happened though, but ya we had fun, played pictionary and obviously won hahaha, I am soo good ik ik.
+
+Don't laugh okay, I know you are laughing, bad girl bad nun.
+
+Then aaj after gym we had diet coke yeye and chicken biryani, it was kinda good for the price I would say. Then we had fresh lime, refreshing.
+
+And yaar I was alone aaj cab mai and she dropped like almost to my PG hehe. That was good, very good ride worth it.
+
+Abhi to I might play some games or touch myself imagining you hehe, u will never know hahahaha. Or I might already be, as I am writing this letter.
+
+Aaj I plan to order cooked grill chicken from Licious, 200 ka hai, and dinner is biryani, that's why, and and...
+
+That's all aaj and yesterday ke lia.
+
+Tell me how was Udupi ka set dosa.
+
+See ya soon hehe.
+
+Good luck for your exams. I know you gonna crush them.
+
+I love you soo much.
+
+[a heart, labeled "Muru"] yes it's a heart, I am not an artist.`
+      },
+      {
+        date: "2/06/26",
+        title: "letter four",
+        body: `Ooooh wait did you check.
+
+Aaj is 2-6-26, damn damn.
+
+Hehe, yaar I wanna eat you hehe.
+
+So aaj was pretty boring, half of the team was work from home and I didn't really have much work to do, so I scrolled lot of reels hehe, and for breakfast I had chicken cheese omelette, lunch mai it was grilled chicken, potato and salad. It was pretty decent, and aaj to it rained lika very hard. Like my dil when I see you :(
+
+Then to soosoosoo much traffic and I won the mug hehe flenflen.
+
+Plan to hai I will use it from tomorrow wala seesee.
+
+And yaar tomorrow I have to give team party, so I am thinking let's order like vadapao or lika something like that, idk what to order, but hopefully future me can uk order something good.
+
+Ya I have to do some study uk regarding some topics, boring work but ya hehe.
+
+Chalo, aaj ke liya itna hi.
+
+I love you hehe.
+
+[a heart with a smiley face] I am getting better at drawing, or am i?`
+      },
+      {
+        date: "4/06/26",
+        title: "letter five",
+        body: `Hellos hehe,
+
+Let's talk about aaj, soso, I felt lazy af so no gym hehe.
+
+And for breakfast I had chicken cheesy omelette hehe, it was pretty decent or like nicey.
+
+Then aaj we made our slave (AI) work a lot, like 5000 lines hehe. It's just like the good old days (slavery hehe) yaar, when AI rules us and reads this.
+
+Vo to erdum fuck me hard, so we can ut do that abhi for practise, hehe. Then aaj Gaurav ka presentation tha, so hehe time pass hua, it was good and I took the cab back, took like 22 mins. Then we went home, golgappe hehe. So like I had 2 flavour out of 6, uk they tasted good and abu it was a bit sweet hehe.
+
+Then like after one plate, we were like why not one more, so as we had another piece I looked at black and bc it was gonna rain hard af.
+
+And the moment I said that, I rained very sad, but we were like golgappe very important nai hehe hehe.
+
+Thankfully, Gaurav had an umbrella, so I got saved, nhi to it would be very hard, I would be wet hehe.
+
+And yesterday I didn't give you a food review, so total was 820 Rs, seriously, for mango lassi, honey chilly potato, dahi ke kabab.
+
+And dahi ke kabab was like 7/10, honey chilly was like 4/10, ligit felt bad. And mango lassi like 7, quantity kam thi.
+
+So like def not worth it, and like man it should be like 500 Rs, very sad.
+
+Chalo hehe good luck for exams hehe.
+
+[a heart with a smiley face] much better hehe,
+
+I love you...
+
+Ruru.`
+      },
+      {
+        date: "10/06/26",
+        title: "letter six",
+        body: `Hey baby..., so I have a lot of updates for the past days,
+
+So we got our salary hehe, a lot of it, and I gave a lot to mom uk last term ki fee ke save karne ke liya, and this month ki salary I will pay next term fees hehe.
+
+And I got headphones, hey are gooood.
+
+And also hehe I logged into my actual savings and ig you forgot that ye also are logged in, so I got a cheat sheet hehe.
+
+Now I can easily gift you clone hehe hehe. And be a good girl and accept them.
+
+Yaar Monday or Tuesday I might have presentation, so I worked on it a lot. So we working on it also alot.
+
+And kal se we have a lot of work to do, like first community work like from 8 to like 1, then lunch ke baad to soo many trainings, like till 5, they are optional but ya I intend kar hi lunga uk, gotta learn shit, and hopefully presentation aacha ho.
+
+And idk ghar jaana hai yaar, idk what to take her home like, I can't go khali hath, I was thinking ki mango ya daaru le jau.
+
+But icecream bhi kar sakte hai, but never know.
+
+Kal ka I will tell hehehehe.
+
+I love youuuu.
+
+♡ ♡ :)`
+      },
+      {
+        date: "16/6/26",
+        title: "letter seven",
+        body: `Heyy baby,
+
+I haven't written anything in some time hehe, my bad.
+
+Sooo let me tell you what all happened.
+
+So we had the coading competition, it was like not too hard but those mf, only one restaurant was open so it was soo crowdy my god, so I had an apple hehe.
+
+And also I went to dinner and had Rajma Chawal, food was good af, and also she had matcha flavoured KitKat, and like I couldn't really feel if it had matcha, and it tasted good, idk why others didn't like it at all.
+
+And we also had the community work, it was like my god.
+
+So first they tell us to come at 8, and made us wait until 9:30, then myself and then obviously Bangalore traffic, it was soo bad, like for 11 km it took almost 2 hours, and then we reach at, we made sandwiches of butter and jam, and like I was done with my pile of bread and asked for more, and he said like no you're done.
+
+And again took 2 hours, so we travelled for like total what, 7 hours to make 9 sandwiches, pretty boring.
+
+And the coading competition had like 4 questions and 90 mins time, and like it was kinda tuff / hard.
+
+And aaj we had presentation, it went brutal, uk it was supposed to be 30 mins and it stretched for like an hour. It kinda went good, like mid af, and like I ans some questions but not all, maybe I did something wrong idk.
+
+But ig it went fine, and I was like sweating a fuck ton, and like I got tired afterwards, so I went home early hehe as to I will do the pass.
+
+And it's gonna be 11 months soon.
+
+Rest I will share to you on call.
+
+I love you
+
+♡ ♡`
+      },
+      {
+        date: "23/06/26",
+        title: "letter eight",
+        body: `Hello muru.
+
+How are you? I know, I know you are pretty as fuck hehehe.
+
+So let me tell you about umm, what happened this past time soso, starting from Saturday, so like I went to gym na, I had cardio and the gym trainer commes and ask like he was doing a session and if I wanna join, and I was like okay, and like there were around 4 other, and my god it was like hard, uk, and it was pretty fun and challenging. Then there I was like should I not, but I was like fuck it, and we had biryani, chicken roll with diet coke and raita.
+
+That was very good hehe, and then I was going back to room, so I thought let's do a hair cleanup, and I paid 250 for haircut, shave, head massage and food nosh.
+
+Like the head massage was so so orgasmic, I came sooo hard mn, and like I didn't really did a haircut though, and I had plan to go to Muralika di to have mango shake. But the moment I went out, it fucking started to rain hard af.
+
+And bat tak chal ni thi yaar, very annoying.
+
+So Sunday comes, I was again free af, and modafever hype tha, and I ordered snacks like chocobites and Instamart smart of gave me free cucumber like wtf.
+
+And Monday came, and like I was doing work in office, and then went to Muralika di ghar, and one more didi was living with her, like PG, it was temporary, pata nhi exactly, and it got late, so she also told wait for dinner, so I was like okayyy, and then aunty came and cooked, and I was shocked, I thought she used to cook herself, and we had methi aloo, and she also stopped daaru and had free ki daaru bottle, and asked me if I wanted it, should I say yes? And after dinner we made mango shake, and I came back home hehe.
+
+That's all mera hooomu, I love you soso much muru.
+
+♡ ♡
+
+I sometimes get hard on call with you :)`
+      },
+      {
+        date: "28/6/26",
+        title: "letter nine",
+        body: `Hey Janeman, love of my life,
+
+So abhi you will be going home so yo, this week gonna be hard but just hope we can have some calls hopefully.
+
+And as this diary is almost ending and I want it to have my intern experience in it hehe.
+
+So let's talk about last 2 / 3 days, soso. Thursday wasn't much eventful, lot of work, and I let bring pizza from office, and it was good, and chalo hehe. And Friday, my god, very eventful.
+
+So we had fun hour, as every week, it was very good, and the intern event, so the 1st round was uk you get some straws and paper, and you have to make the tallest tower possible, and then they put a cup on top of it, and it has to not fall, and our team did kinda mid when.
+
+And second round was that we had 2 newspaper, and then we have to choose one person in our team and dress them as superhero, very interesting ik hehe.
+
+And obviously I was chosen, so I was supposedly Superman, and with a gun and a crown, idk why, a belt and something on my legs, and the ring on the top, I had a tail. So ya, ig hehe.
+
+But sadly we were out after this round, very sad hehe.
+
+Then we had the mocktail one, so I go, and there we had to make something with ingredients, and we had apple, lime, blueberry and grape, and we made Dr. Sours.
+
+So it's an original drink with blended apple as base, with mushed berry and grape, topped with lime and ginger ale, and it turned pretty decent.
+
+But sadly we didn't win, not very sad, as price was chocolate, so ya hehe.
+
+And yes about Saturday hehe, ik this one is pretty long hehe.
+
+So there is one of my seniors named Siddhart, we met on Zoom, and he came from Dubai for some checkup, so after gym in morning I had my obvious biryani and diet coke hehe, and I met with him at around 2:30, and my god the traffic on a fucking Saturday, how is it that bad, godd.
+
+So we wanted to try Buffalo Wild Wings, so we go there, and wow, no wings in fucking Buffalo Wild Wings, lika wtf, that's so gay so.
+
+So we went to a pizza show mistake, the food was so soso bad, like (31/100) that bad.
+
+And then we did bowling hehe, and there was a shop named Japans, no I, pankala, and I wanted to really try that, but I didn't.
+
+And we cancelled the car show cause it was far af, and while exiting they were giving free sample at Starbucks, and it was soso good.
+
+And we went to Indiranagar, did wine paas for 1 hr, had a glass of wine which was shit hehe, and met with others, went to a bar, had 3 shots, then exited cause no seats, and went to a food truck which had soo good hot dog like krazy good, and had pasta at a restaurant.
+
+Sorry baby hehe, kept it short, don't have many pages left, sorry.
+
+I love you and can't wait to be with you again.
+
+My muru.`
+      },
+      {
+        date: "4/07/26",
+        title: "letter ten",
+        body: `So aaj we had a plan, as you know I had to give a treat to Muralika di, so we went to have matcha, so she has pistachio matcha, and I had tiramisu flavour, which was not really that good, like the taste was very hard to define.
+
+Then she had the same one, and I tried berry one, which was pretty decent I think. And we played like card game which had like deep questions, and like you had to answer them, pretty good.
+
+Then we planned to have momos, there was supposed to be one of the best, but when we reached, no shop, very sad (:( ), but then I went to watch Minions like in 3D, pretty average, ig not worth 670.
+
+So after all that I was like let's decide gifts for mom and dad na.
+
+So for mom I got an expensive bag like 9k from Charles & Keith, it was nice colour, hopefully she likes it. And papa ke liya I got a premium leather purse, it is supposed to be very good, let's see how it comes out, pretty excited hehe. Let's hope they actually like it hehe.
+
+And I have some ideas for bhaiya, and you hehe, but a surprise.
+
+Lastly, as you know we short on pages, so sadly gotta end it here.
+
+Good Night muru,
+
+♡
+
+I love you.`
+      },
+      {
+        date: "17/07/26",
+        title: "final letter",
+        body: `Tomorrow it's gonna be 1 year to us. A whole year of you, and I still can't believe how lucky I got.
+
+And I'm done with the internship too, it was so much fun honestly, I'm gonna miss it, but I'm even more excited to see you again soon.
+
+And finally, it's time to end these letters. Every single one of them was written thinking about you, and I hope that came through. Hopefully when you read them tomorrow, you like them, and you know just how much you mean to me.
+
+I love you so so much, more than these pages could ever hold. Happy anniversary in advance, Ruru.
+
+♡ ♡`
+      }
+    ];
+    await persist();
+  }
+}
+
+async function persist(){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(letters));
+  }catch(e){
+    console.error('storage failed', e);
+  }
+}
+
+function renderCard(){
+  const card = document.getElementById('card');
+  const subtitle = document.getElementById('subtitle');
+
+  if(letters.length === 0){
+    card.innerHTML = `<div class="empty-state">
+      <div class="glyph">✦</div>
+      <div>no letters yet.<br>add the first one below.</div>
+    </div>`;
+    subtitle.textContent = 'an empty page, waiting';
+    renderDots();
+    updateNavButtons();
+    return;
+  }
+
+  if(current < 0) current = 0;
+  if(current > letters.length - 1) current = letters.length - 1;
+
+  const l = letters[current];
+  const idx = String(current + 1).padStart(2,'0');
+  const total = String(letters.length).padStart(2,'0');
+
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="letter-index">${l.title ? l.title : 'letter ' + idx} · ${idx} / ${total}</span>
+      <span class="letter-date">${l.date ? l.date : ''}</span>
+    </div>
+    <div class="letter-body">${escapeHtml(l.body)}</div>
+    <div style="margin-top:20px; text-align:right;">
+      <button class="delete-btn" onclick="deleteLetter(${current})">remove this letter</button>
+    </div>
+  `;
+
+  subtitle.textContent = `${letters.length} letter${letters.length === 1 ? '' : 's'} written so far`;
+  renderDots();
+  updateNavButtons();
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderDots(){
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  letters.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === current ? ' active' : '');
+    d.onclick = () => { current = i; renderCard(); };
+    dots.appendChild(d);
+  });
+}
+
+function updateNavButtons(){
+  document.getElementById('prevBtn').disabled = current <= 0 || letters.length === 0;
+  document.getElementById('nextBtn').disabled = current >= letters.length - 1 || letters.length === 0;
+}
+
+document.getElementById('prevBtn').onclick = () => { current--; renderCard(); };
+document.getElementById('nextBtn').onclick = () => { current++; renderCard(); };
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
+  if(e.key === 'ArrowRight') document.getElementById('nextBtn').click();
+});
+
+async function deleteLetter(i){
+  letters.splice(i,1);
+  if(current >= letters.length) current = letters.length - 1;
+  await persist();
+  renderCard();
+}
+
+document.getElementById('saveBtn').onclick = async () => {
+  const body = document.getElementById('inputBody').value.trim();
+  const date = document.getElementById('inputDate').value.trim();
+  const title = document.getElementById('inputTitle').value.trim();
+  const statusMsg = document.getElementById('statusMsg');
+
+  if(!body){
+    statusMsg.textContent = 'write something first.';
+    return;
+  }
+
+  letters.push({ date, title, body });
+  await persist();
+  document.getElementById('inputBody').value = '';
+  document.getElementById('inputDate').value = '';
+  document.getElementById('inputTitle').value = '';
+  statusMsg.textContent = 'saved.';
+  current = letters.length - 1;
+  renderCard();
+  setTimeout(() => { statusMsg.textContent = ''; }, 2000);
+};
+
+(async function init(){
+  await loadLetters();
+  current = 0;
+  renderCard();
+})();
+</script>
+
+</body>
+</html>
