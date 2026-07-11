@@ -701,9 +701,6 @@ function renderCard(){
       <span class="letter-date">${l.date ? l.date : ''}</span>
     </div>
     <div class="letter-body">${escapeHtml(l.body)}</div>
-    <div style="margin-top:20px; text-align:right;">
-      <button class="delete-btn" onclick="deleteLetter(${current})">remove this letter</button>
-    </div>
   `;
 
   subtitle.textContent = `${letters.length} letter${letters.length === 1 ? '' : 's'} written so far`;
@@ -748,27 +745,7 @@ async function deleteLetter(i){
   renderCard();
 }
 
-document.getElementById('saveBtn').onclick = async () => {
-  const body = document.getElementById('inputBody').value.trim();
-  const date = document.getElementById('inputDate').value.trim();
-  const title = document.getElementById('inputTitle').value.trim();
-  const statusMsg = document.getElementById('statusMsg');
 
-  if(!body){
-    statusMsg.textContent = 'write something first.';
-    return;
-  }
-
-  letters.push({ date, title, body });
-  await persist();
-  document.getElementById('inputBody').value = '';
-  document.getElementById('inputDate').value = '';
-  document.getElementById('inputTitle').value = '';
-  statusMsg.textContent = 'saved.';
-  current = letters.length - 1;
-  renderCard();
-  setTimeout(() => { statusMsg.textContent = ''; }, 2000);
-};
 
 (async function init(){
   try{
