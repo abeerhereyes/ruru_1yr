@@ -317,9 +317,46 @@ const STORAGE_KEY = 'letters:all';
 let letters = [];
 let current = 0;
 
+// Works both inside Claude.ai (window.storage) and standalone deployments (localStorage).
+const hasClaudeStorage = typeof window !== 'undefined' && !!window.storage;
+
+async function storageGet(key){
+  if(hasClaudeStorage){
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('storage timeout')), 2500));
+    try{
+      return await Promise.race([window.storage.get(key), timeout]);
+    }catch(e){
+      return null;
+    }
+  }
+  try{
+    const raw = localStorage.getItem(key);
+    return raw ? { value: raw } : null;
+  }catch(e){
+    return null;
+  }
+}
+
+async function storageSet(key, value){
+  if(hasClaudeStorage){
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('storage timeout')), 2500));
+    try{
+      return await Promise.race([window.storage.set(key, value), timeout]);
+    }catch(e){
+      return null;
+    }
+  }
+  try{
+    localStorage.setItem(key, value);
+    return { value };
+  }catch(e){
+    return null;
+  }
+}
+
 async function loadLetters(){
   try{
-    const res = await window.storage.get(STORAGE_KEY);
+    const res = await storageGet(STORAGE_KEY);
     letters = res && res.value ? JSON.parse(res.value) : [];
   }catch(e){
     letters = [];
@@ -630,7 +667,7 @@ I love you so so much, more than these pages could ever hold. Happy anniversary 
 
 async function persist(){
   try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(letters));
+    await storageSet(STORAGE_KEY, JSON.stringify(letters));
   }catch(e){
     console.error('storage failed', e);
   }
@@ -734,7 +771,11 @@ document.getElementById('saveBtn').onclick = async () => {
 };
 
 (async function init(){
-  await loadLetters();
+  try{
+    await loadLetters();
+  }catch(e){
+    letters = letters && letters.length ? letters : [];
+  }
   current = 0;
   renderCard();
 })();
